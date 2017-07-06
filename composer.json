@@ -1,6 +1,6 @@
 {
     "name": "awheel/redis-lock",
-    "description": "Redis lock",
+    "description": "基于 Redis 实现的并发防穿透锁",
     "license": "MIT",
     "homepage": "http://awheel.com",
     "authors": [
