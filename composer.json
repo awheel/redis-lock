@@ -1,0 +1,21 @@
+{
+    "name": "awheel/redis-lock",
+    "description": "Redis lock",
+    "license": "MIT",
+    "homepage": "http://awheel.com",
+    "authors": [
+        {
+            "name": "fengqi",
+            "email": "lyf362345@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "ext-redis": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "awheel\\RedisLock": "src/"
+        }
+    }
+}
