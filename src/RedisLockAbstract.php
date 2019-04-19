@@ -30,17 +30,15 @@ abstract class RedisLockAbstract
     {
         $redis = static::getInstance();
         $lock_key = $key . '_lock_key';
-        $is_lock = $redis->setnx($lock_key, time() + $expire);
+        $is_lock = $redis->set($lock_key, time() + $expire, array('nx', 'ex' => $expire));
 
         if (!$is_lock) {
             $lock_time = $redis->get($lock_key);
             if (time() > $lock_time) {
                 static::unlock($key);
-                $is_lock = $redis->setnx($lock_key, time() + $expire);
+                $is_lock = $redis->set($lock_key, time() + $expire, array('nx', 'ex' => $expire));
             }
         }
-
-        $redis->expire($lock_key, $expire);
 
         return (bool) $is_lock;
     }
