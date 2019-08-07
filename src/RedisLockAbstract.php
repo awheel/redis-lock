@@ -11,7 +11,12 @@ use Redis;
  */
 abstract class RedisLockAbstract
 {
-	/**
+    /**
+     * @var Redis;
+     */
+    protected static $redis;
+
+    /**
      * 获取 Redis 对象
      *
      * @return Redis
@@ -55,5 +60,19 @@ abstract class RedisLockAbstract
         $lock_key = $key . '_lock_key';
 
         return (bool) static::getInstance()->del($lock_key);
+    }
+
+    /**
+     * 续锁时间
+     *
+     * @param string $key 锁 key
+     * @param int $expire 过时时间
+     *
+     * @return bool
+     */
+    static public function renew($key, $expire = 5)
+    {
+        $lock_key = $key . '_lock_key';
+        return static::getInstance()->set($lock_key, time() + $expire, $expire);
     }
 }
