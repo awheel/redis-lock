@@ -2,11 +2,11 @@
 
 namespace awheel\RedisLock;
 
-require '../src/RedisLockAbstract.php';
+require __DIR__.'/../src/RedisLockAbstract.php';
 
 use Redis;
 
-class example extends RedisLockAbstract
+class RedisLock extends RedisLockAbstract
 {
     /**
      * 获取 Redis 对象
@@ -15,20 +15,20 @@ class example extends RedisLockAbstract
      */
     static public function getInstance()
     {
-        $redis = new Redis();
-        $redis->connect('127.0.0.1');
+        self::$redis = new Redis();
+        self::$redis->connect('127.0.0.1');
 
-        return $redis;
+        return self::$redis;
     }
 }
 
 $key = 'redis_lock_test';
-$data = example::getInstance()->get($key);
+if (RedisLock::lock($key)) {
+    printf("locked\n");
 
-if (example::lock($key)) {
-    $data = 'hello world';
-    example::getInstance()->setex($key, 10, $data);
-    example::unlock($key);
+    // do something
+    RedisLock::renew($key, 5);
+
+    $unlock = RedisLock::unlock($key);
+    $unlock && printf("unlocked\n");
 }
-
-var_dump($data);
